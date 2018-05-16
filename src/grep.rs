@@ -8,7 +8,7 @@ use std::process;
 
 pub fn grep_exec(query: &str, filename: &str, flag: &Option<String>) {
     let contents = read_file(&filename).unwrap_or_else(|err| {
-        println!("Problem reading file: {}", err);
+        eprintln!("Problem reading file: {}", err);
         process::exit(1);
     });
 
