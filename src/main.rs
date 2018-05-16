@@ -10,5 +10,5 @@ fn main() {
         process::exit(1);
     });
 
-    grep::grep_exec(&config.query, &config.filename)
+    grep::grep_exec(&config.query, &config.filename, &config.flag)
 }
