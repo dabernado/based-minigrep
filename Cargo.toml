@@ -1,0 +1,7 @@
+[package]
+name = "pandion"
+version = "0.1.0"
+authors = ["David Bernado <dbernado@protonmail.com>"]
+
+[dependencies]
+regex = "1.0.0"
