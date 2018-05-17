@@ -11,3 +11,6 @@ Features I may add in the future, but probably won't:
 	- Returns the indices of each occurence of the query
 	- More flags
 	- Can place flag anywhere in the program call, instead of forcing it to be the last argument
+
+## I want this to be a library!!
+Sure, just use 'grep.rs' from the 'src' directory and it should give you everything you need. Keep in mind that it is still licensed under the AGPLv3.
