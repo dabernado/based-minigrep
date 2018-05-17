@@ -14,5 +14,12 @@ Features I may add in the future, but probably won't:
 - More flags
 - Can place flag anywhere in the program call, instead of forcing it to be the last argument
 
+## Build and Install
+`git clone https://github.com/davidabernado/based-minigrep
+ cd based-minigrep
+ cargo build --release`
+
+ Once the binary is built, move it to /usr/bin/ or wherever you store your binaries.
+
 ## I want this to be a library!!
 Sure, just use 'grep.rs' from the 'src' directory and it should give you everything you need. Keep in mind that it is still licensed under the AGPLv3.
