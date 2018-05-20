@@ -1,11 +1,10 @@
-extern crate pandion;
+extern crate based_minigrep;
 use std::env;
 use std::process;
-use pandion::grep;
+use based_minigrep::grep;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let config = grep::Config::new(&args).unwrap_or_else(|err| {
+    let config = grep::Config::new(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
