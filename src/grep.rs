@@ -99,29 +99,3 @@ impl Config {
         }
     }
 }
-
-mod test {
-    #[test]
-    fn one_result() {
-        let query = "duct";
-        let contents = "\nRust:\nsafe, fast, productive, duct tape.\nPick three.";
-        let flag = None;
-
-        assert_eq!(
-            1,
-            ::grep::search(&query, &contents, &flag)
-        );
-    }
-
-    #[test]
-    fn case_insensitive() {
-        let query = "rUsT";
-        let contents = "\nRust:\nsafe, fast, productive, duct tape.\nPick three. RuSt";
-        let flag = Some(String::from("-c"));
-
-        assert_eq!(
-            2,
-            ::grep::search(&query, &contents, &flag),
-        );
-    }
-}
