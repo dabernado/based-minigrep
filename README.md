@@ -1,6 +1,7 @@
 # based-minigrep
 based-minigrep is my implementation of the 'minigrep' coding challenge in the Rust book, but with a few key differences:
 
+- Can search for multiple words in a file at once via multithreading
 - Uses "match" in environment argument parsing, in order to send error messages when there are not enough arguments AND too many
 - Uses the newer, simpler "fs::read_to_string" function over using "File::open", etc.
 - Implements the "case_sensitive" environment variable as a flag passed to the program (as "-c", passed as the last argument to the program)
@@ -9,11 +10,22 @@ based-minigrep is my implementation of the 'minigrep' coding challenge in the Ru
 - Matches only if the substring in the text is the query as a full word (ex., 'the' will match 'the' but not 'there')
 - Returns the number of occurences of the query, rather than the lines which contain them (because I intend for this code to be used in a larger project, which doesn't care about the lines of text)
 
+Program calls are structured like this:
+
+```
+based-minigrep [filename] [-c] [queries]
+```
+
+Here is an example:
+
+```
+based-minigrep poem.txt -c the you
+```
+
 Features I may add in the future, but probably won't:
 
 - Returns the indices of each occurence of the query
 - More flags
-- Can place flag anywhere in the program call, instead of forcing it to be the last argument
 
 ## Build and Install
 
