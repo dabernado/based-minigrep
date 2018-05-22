@@ -5,3 +5,4 @@ authors = ["David Bernado <dbernado@protonmail.com>"]
 
 [dependencies]
 regex = "1.0.0"
+rayon = "1.0.1"

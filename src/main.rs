@@ -9,5 +9,5 @@ fn main() {
         process::exit(1);
     });
 
-    grep::grep_exec(&config.query, &config.filename, &config.flag)
+    grep::grep_exec(&config.filename, &config.flag, &config.words)
 }

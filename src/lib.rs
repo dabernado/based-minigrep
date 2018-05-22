@@ -1,4 +1,5 @@
 extern crate regex;
+extern crate rayon;
 
 pub mod grep {
     use std::fs;
@@ -7,14 +8,19 @@ pub mod grep {
     use ::regex::Regex;
     use ::regex::escape;
     use std::process;
+    use rayon::prelude::*;
 
-    pub fn grep_exec(query: &str, filename: &str, flag: &str) {
+    pub fn grep_exec(filename: &str, flag: &str, words: &Vec<String>) {
         let contents = read_file(&filename).unwrap_or_else(|err| {
             eprintln!("Problem reading file: {}", err);
             process::exit(1);
         });
 
-        println!("'{}' occurs {} times in {}", query, search(&query, &contents, &flag), filename);
+        let words_iter = words.par_iter();
+
+        words_iter.for_each(|word| {
+            println!("'{}' occurs {} times in {}", word, search(&word, &contents, &flag), filename);
+        });
     }
 
     pub fn read_file(filename: &str) -> Result<String, Box<Error>> {
@@ -47,9 +53,9 @@ pub mod grep {
     }
 
     pub struct Config {
-        pub query: String,
         pub filename: String,
         pub flag: String,
+        pub words: Vec<String>,
     }
 
     impl Config {
@@ -59,40 +65,21 @@ pub mod grep {
             let args_length = args.len();
             match args_length {
                 1 => Err("Not enough arguments"),
-                2 => {
-                    let query = match args.next() {
-                        Some(arg) => arg,
-                        None => return Err("Didn't get a query string"),
-                    };
-
+                _ => {
                     let filename = match args.next() {
                         Some(arg) => arg,
                         None => return Err("Didn't get a filename"),
                     };
 
-                    let flag = String::from("NO_FLAG");
-
-                    Ok(Config {query, filename, flag})
-                },
-                3 => {
-                    let query = match args.next() {
-                        Some(arg) => arg,
-                        None => return Err("Didn't get a query string"),
-                    };
-
-                    let filename = match args.next() {
-                        Some(arg) => arg,
-                        None => return Err("Didn't get a filename"),
-                    };
-                
                     let flag = match args.next() {
                         Some(arg) => arg,
-                        None => return Err("Didn't get a flag"),
+                        None => String::from("NO_FLAG"),
                     };
 
-                    Ok(Config {query, filename, flag})
+                    let words = args.collect();
+
+                    Ok(Config {filename, flag, words})
                 },
-                _ => Err("Too many arguments"),
             }
         }
     }
