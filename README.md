@@ -13,7 +13,7 @@ based-minigrep is my implementation of the 'minigrep' coding challenge in the Ru
 Program calls are structured like this:
 
 ```
-based-minigrep [filename] [-c] [queries]
+based-minigrep [filename] [-c | -n] [queries]
 ```
 
 Here is an example:
