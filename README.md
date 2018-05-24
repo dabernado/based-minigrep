@@ -25,6 +25,7 @@ based-minigrep poem.txt -c the you
 Features I may add in the future, but probably won't:
 
 - Returns the indices of each occurence of the query
+- Remove the need for the "-n" flag
 - More flags
 
 ## Build and Install
