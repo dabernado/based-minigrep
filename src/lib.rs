@@ -69,10 +69,7 @@ pub mod grep {
                 None => return Err("Didn't get a filename"),
             };
 
-            let flag = match args.next().unwrap_or_else(|| {
-                eprintln!("ERROR: You must provide a flag");
-                process::exit(1);
-            }).as_str() {
+            let flag = match args.next().unwrap().as_str() {
                 "-c" => Flag::Lowercase,
                 "-n" => Flag::NoFlag,
                 _ => {
