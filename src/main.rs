@@ -1,4 +1,5 @@
 extern crate based_minigrep;
+
 use std::env;
 use std::process;
 use based_minigrep::grep;
@@ -9,5 +10,5 @@ fn main() {
         process::exit(1);
     });
 
-    grep::grep_exec(&config.filename, &config.flag, &config.words)
+    grep::grep_exec(&config.filename, config.flag, &config.words);
 }

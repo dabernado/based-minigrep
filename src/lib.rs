@@ -10,7 +10,7 @@ pub mod grep {
     use std::process;
     use rayon::prelude::*;
 
-    pub fn grep_exec(filename: &str, flag: &str, words: &Vec<String>) {
+    pub fn grep_exec(filename: &str, flag: Flag, words: &Vec<String>) {
         let contents = read_file(&filename).unwrap_or_else(|err| {
             eprintln!("Problem reading file: {}", err);
             process::exit(1);
@@ -19,7 +19,7 @@ pub mod grep {
         let words_iter = words.par_iter();
 
         words_iter.for_each(|word| {
-            println!("'{}' occurs {} times in {}", word, search(&word, &contents, &flag), filename);
+            println!("'{}' occurs {} times in {}", word, search(word, &contents, &flag), filename);
         });
     }
 
@@ -29,32 +29,34 @@ pub mod grep {
         Ok(contents)
     }
 
-    pub fn search(query: &str, contents: &str, flag: &str) -> usize {
+    pub fn search(query: &str, contents: &str, flag: &Flag) -> usize {
         let re = Regex::new(format!(r#"{}\b"#, query.to_lowercase().as_str()).as_str()).unwrap();
 
-        let case_sensitive = String::from("-c");
-        let none = String::from("NO_FLAG");
-
         match flag {
-            case_sensitive => {
+            Flag::Lowercase => {
                 let lowercased = contents.to_lowercase();
                 let text = escape(lowercased.as_str());
                 let score = re.find_iter(text.as_str()).count();
                 
                 score
-            }
-            none => {
+            },
+            Flag::NoFlag => {
                 let text = escape(contents);
                 let score = re.find_iter(text.as_str()).count();
-
+                
                 score
-            }
+            },
         }
+    }
+
+    pub enum Flag {
+        Lowercase,
+        NoFlag,
     }
 
     pub struct Config {
         pub filename: String,
-        pub flag: String,
+        pub flag: Flag,
         pub words: Vec<String>,
     }
 
@@ -62,25 +64,26 @@ pub mod grep {
         pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
             args.next();
 
-            let args_length = args.len();
-            match args_length {
-                1 => Err("Not enough arguments"),
+            let filename = match args.next() {
+                Some(arg) => arg,
+                None => return Err("Didn't get a filename"),
+            };
+
+            let flag = match args.next().unwrap_or_else(|| {
+                eprintln!("ERROR: You must provide a flag");
+                process::exit(1);
+            }).as_str() {
+                "-c" => Flag::Lowercase,
+                "-n" => Flag::NoFlag,
                 _ => {
-                    let filename = match args.next() {
-                        Some(arg) => arg,
-                        None => return Err("Didn't get a filename"),
-                    };
+                    eprintln!("ERROR: Flag provided does not exist. See documentation");
+                    process::exit(1);
+                }
+            };
 
-                    let flag = match args.next() {
-                        Some(arg) => arg,
-                        None => String::from("NO_FLAG"),
-                    };
+            let words = args.collect();
 
-                    let words = args.collect();
-
-                    Ok(Config {filename, flag, words})
-                },
-            }
+            Ok(Config {filename, flag, words})
         }
     }
 }
